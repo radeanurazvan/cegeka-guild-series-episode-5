@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Business\Cegeka.Guild.Pokeverse.Business.csproj" />
+    <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Domain\Cegeka.Guild.Pokeverse.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

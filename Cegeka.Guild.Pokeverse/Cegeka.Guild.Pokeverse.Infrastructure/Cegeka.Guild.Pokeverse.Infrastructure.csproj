@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Persistence.EntityFramework\Cegeka.Guild.Pokeverse.Persistence.EntityFramework.csproj" />
+    <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Persistence.InMemory\Cegeka.Guild.Pokeverse.Persistence.InMemory.csproj" />
+  </ItemGroup>
+
+</Project>
