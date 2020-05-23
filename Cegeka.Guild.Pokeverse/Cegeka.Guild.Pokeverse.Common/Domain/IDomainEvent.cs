@@ -2,7 +2,7 @@
 
 namespace Cegeka.Guild.Pokeverse.Common
 {
-    public interface IDomainEvent : INotification
+    public interface IDomainEvent : INotification, IMessage
     {
         
     }

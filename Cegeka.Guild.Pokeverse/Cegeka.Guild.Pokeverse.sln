@@ -23,17 +23,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04. Crosscutting Concerns",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Common", "Cegeka.Guild.Pokeverse.Common\Cegeka.Guild.Pokeverse.Common.csproj", "{8193EA21-BE33-480F-9025-702E9876E37D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Read.Api", "Cegeka.Guild.Pokeverse.Read.Api\Cegeka.Guild.Pokeverse.Read.Api.csproj", "{BF3D97FE-6761-459C-82E0-C277587A1EC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Read.Api", "Cegeka.Guild.Pokeverse.Read.Api\Cegeka.Guild.Pokeverse.Read.Api.csproj", "{BF3D97FE-6761-459C-82E0-C277587A1EC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Projector", "Cegeka.Guild.Pokeverse.Projector\Cegeka.Guild.Pokeverse.Projector.csproj", "{A3BD3894-922D-4AFF-A566-70A97082B862}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Projector", "Cegeka.Guild.Pokeverse.Projector\Cegeka.Guild.Pokeverse.Projector.csproj", "{A3BD3894-922D-4AFF-A566-70A97082B862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Read.Domain", "Cegeka.Guild.Pokeverse.Read.Domain\Cegeka.Guild.Pokeverse.Read.Domain.csproj", "{98511104-3515-4A4F-9765-E23B6086847C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Read.Domain", "Cegeka.Guild.Pokeverse.Read.Domain\Cegeka.Guild.Pokeverse.Read.Domain.csproj", "{98511104-3515-4A4F-9765-E23B6086847C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Persistence.Mongo", "Cegeka.Guild.Pokeverse.Persistence.Mongo\Cegeka.Guild.Pokeverse.Persistence.Mongo.csproj", "{29900E2C-DE9C-4C53-8C6E-85E43342EB10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Persistence.Mongo", "Cegeka.Guild.Pokeverse.Persistence.Mongo\Cegeka.Guild.Pokeverse.Persistence.Mongo.csproj", "{29900E2C-DE9C-4C53-8C6E-85E43342EB10}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Write.Api", "Cegeka.Guild.Pokeverse.Write.Api\Cegeka.Guild.Pokeverse.Write.Api.csproj", "{AAC34D94-8219-484A-B70D-E144EB99BD0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.RabbitMQ", "Cegeka.Guild.Pokeverse.RabbitMQ\Cegeka.Guild.Pokeverse.RabbitMQ.csproj", "{FA49DD50-B3EB-4C38-BE80-935448B01BA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Messaging.RabbitMQ", "Cegeka.Guild.Pokeverse.Messaging.RabbitMQ\Cegeka.Guild.Pokeverse.Messaging.RabbitMQ.csproj", "{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,10 +85,10 @@ Global
 		{AAC34D94-8219-484A-B70D-E144EB99BD0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAC34D94-8219-484A-B70D-E144EB99BD0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAC34D94-8219-484A-B70D-E144EB99BD0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,7 +105,7 @@ Global
 		{98511104-3515-4A4F-9765-E23B6086847C} = {A3491B55-12B5-4757-ACBE-3E98322DDF7C}
 		{29900E2C-DE9C-4C53-8C6E-85E43342EB10} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 		{AAC34D94-8219-484A-B70D-E144EB99BD0B} = {BCDE5751-D407-4B78-88F3-43596E945EF8}
-		{FA49DD50-B3EB-4C38-BE80-935448B01BA3} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
+		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC544335-5FBF-4123-9225-066AA7019530}

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Messaging.RabbitMQ\Cegeka.Guild.Pokeverse.Messaging.RabbitMQ.csproj" />
     <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Persistence.EntityFramework\Cegeka.Guild.Pokeverse.Persistence.EntityFramework.csproj" />
     <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Persistence.InMemory\Cegeka.Guild.Pokeverse.Persistence.InMemory.csproj" />
   </ItemGroup>
