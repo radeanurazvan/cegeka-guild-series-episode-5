@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Cegeka.Guild.Pokeverse.Common;
+using Cegeka.Guild.Pokeverse.RabbitMQ.ContractResolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -22,7 +23,7 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
 
         public Task Publish<T>(T message) where T : IMessage
         {
-            var exchangeName = typeof(T).GetExchangeName();
+            var exchangeName = message.GetType().GetExchangeName();
 
             model.ExchangeDeclare(exchangeName, ExchangeType.Fanout);
             var body = Encoding.UTF8.GetBytes(message.ToJson());
@@ -68,11 +69,17 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
         {
             return async (_, args) =>
             {
-                var jsonEvent = JsonConvert.DeserializeObject<T>(args.Body.ToArray().ToUtf8String());
+                var json = args.Body.ToArray().ToUtf8String();
+                var jsonEvent = json.DeserializerObject<T>();
 
                 using (var scope = provider.CreateScope())
                 {
                     var handler = scope.ServiceProvider.GetService(handlerType) as IMessageHandler<T>;
+                    if (handler == null)
+                    {
+                        throw new InvalidOperationException($"Handler {handlerType.Name} not registered!");
+                    }
+
                     await handler.Handle(jsonEvent);
                 }
             };
@@ -89,7 +96,18 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
 
         public static string ToJson(this IMessage message)
         {
-            return JsonConvert.SerializeObject(message);
+            return JsonConvert.SerializeObject(message, new JsonSerializerSettings
+            {
+                ContractResolver = new PrivateCamelCasePropertyContractResolver(),
+            });
+        }
+
+        public static T DeserializerObject<T>(this string objectAsString)
+        {
+            return JsonConvert.DeserializeObject<T>(objectAsString, new JsonSerializerSettings
+            {
+                ContractResolver = new PrivateCamelCasePropertyContractResolver(),
+            });
         }
     }
 }
