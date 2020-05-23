@@ -9,5 +9,9 @@
     <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Read.Domain\Cegeka.Guild.Pokeverse.Read.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 
 </Project>

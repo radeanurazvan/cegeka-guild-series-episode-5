@@ -1,12 +1,27 @@
-﻿using System;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Cegeka.Guild.Pokeverse.Projector
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        public static Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            return new HostBuilder()
+                .ConfigureServices(services => ConfigureServices(services))
+                .UseConsoleLifetime()
+                .Build()
+                .RunAsync();
+        }
+
+        public static IServiceCollection ConfigureServices(IServiceCollection services)
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+            return services.AddSingleton<IConfiguration>(configuration);
         }
     }
 }
