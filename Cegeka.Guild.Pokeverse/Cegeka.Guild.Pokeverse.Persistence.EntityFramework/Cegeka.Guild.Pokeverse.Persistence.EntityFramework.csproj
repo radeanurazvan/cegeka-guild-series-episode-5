@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Domain\Cegeka.Guild.Pokeverse.Domain.csproj" />
+    <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Messaging.RabbitMQ\Cegeka.Guild.Pokeverse.Messaging.RabbitMQ.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Cegeka.Guild.Pokeverse.Common;
 using Cegeka.Guild.Pokeverse.Domain;
+using Cegeka.Guild.Pokeverse.RabbitMQ;
 using MediatR;
 
 namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
@@ -10,12 +11,12 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
         where T : AggregateRoot
     {
         private readonly PokemonsContext context;
-        private readonly IMediator mediator;
+        private readonly IMessageBus messageBus;
 
-        public EntityFrameworkGenericWriteRepository(PokemonsContext context, IMediator mediator)
+        public EntityFrameworkGenericWriteRepository(PokemonsContext context, IMessageBus messageBus)
         {
             this.context = context;
-            this.mediator = mediator;
+            this.messageBus = messageBus;
         }
 
         public Task Add(T entity)
@@ -43,7 +44,7 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
                 var events = aggregate.Events.ToList();
                 aggregate.ClearEvents();
 
-                var tasks = events.Select(e => this.mediator.Publish(e));
+                var tasks = events.Select(e => this.messageBus.Publish(e));
                 await Task.WhenAll(tasks);
             }
         }
