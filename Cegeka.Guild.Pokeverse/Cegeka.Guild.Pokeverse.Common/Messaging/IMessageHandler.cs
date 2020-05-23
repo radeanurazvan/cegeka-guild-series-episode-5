@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Cegeka.Guild.Pokeverse.Common;
 
-namespace Cegeka.Guild.Pokeverse.RabbitMQ
+namespace Cegeka.Guild.Pokeverse.Common
 {
     public interface IMessageHandler<in T>
         where T : IMessage
