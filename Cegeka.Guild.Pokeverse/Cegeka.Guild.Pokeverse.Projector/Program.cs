@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Cegeka.Guild.Pokeverse.Persistence.Mongo;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,7 +22,8 @@ namespace Cegeka.Guild.Pokeverse.Projector
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
-            return services.AddSingleton<IConfiguration>(configuration);
+            return services.AddSingleton<IConfiguration>(configuration)
+                .AddMongoStorage();
         }
     }
 }
