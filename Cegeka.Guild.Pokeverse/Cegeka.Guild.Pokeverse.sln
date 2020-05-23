@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Api", "Cegeka.Guild.Pokeverse.Api\Cegeka.Guild.Pokeverse.Api.csproj", "{C99C0CE6-1D38-44F9-8C73-D9CB3E0F05CD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Presentation", "01. Presentation", "{BCDE5751-D407-4B78-88F3-43596E945EF8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Infrastructure", "02. Infrastructure", "{89692A89-F9DA-4565-B05D-059BFFB3B3B4}"
@@ -23,7 +21,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Pers
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04. Crosscutting Concerns", "04. Crosscutting Concerns", "{C58B9D3A-C263-4A6B-BF83-E0506441720F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Common", "Cegeka.Guild.Pokeverse.Common\Cegeka.Guild.Pokeverse.Common.csproj", "{8193EA21-BE33-480F-9025-702E9876E37D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Common", "Cegeka.Guild.Pokeverse.Common\Cegeka.Guild.Pokeverse.Common.csproj", "{8193EA21-BE33-480F-9025-702E9876E37D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Read.Api", "Cegeka.Guild.Pokeverse.Read.Api\Cegeka.Guild.Pokeverse.Read.Api.csproj", "{BF3D97FE-6761-459C-82E0-C277587A1EC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Projector", "Cegeka.Guild.Pokeverse.Projector\Cegeka.Guild.Pokeverse.Projector.csproj", "{A3BD3894-922D-4AFF-A566-70A97082B862}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Read.Domain", "Cegeka.Guild.Pokeverse.Read.Domain\Cegeka.Guild.Pokeverse.Read.Domain.csproj", "{98511104-3515-4A4F-9765-E23B6086847C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Persistence.Mongo", "Cegeka.Guild.Pokeverse.Persistence.Mongo\Cegeka.Guild.Pokeverse.Persistence.Mongo.csproj", "{29900E2C-DE9C-4C53-8C6E-85E43342EB10}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Write.Api", "Cegeka.Guild.Pokeverse.Write.Api\Cegeka.Guild.Pokeverse.Write.Api.csproj", "{AAC34D94-8219-484A-B70D-E144EB99BD0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.RabbitMQ", "Cegeka.Guild.Pokeverse.RabbitMQ\Cegeka.Guild.Pokeverse.RabbitMQ.csproj", "{FA49DD50-B3EB-4C38-BE80-935448B01BA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +41,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C99C0CE6-1D38-44F9-8C73-D9CB3E0F05CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C99C0CE6-1D38-44F9-8C73-D9CB3E0F05CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C99C0CE6-1D38-44F9-8C73-D9CB3E0F05CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C99C0CE6-1D38-44F9-8C73-D9CB3E0F05CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{085CDB9A-A60E-474B-8838-500877595362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{085CDB9A-A60E-474B-8838-500877595362}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{085CDB9A-A60E-474B-8838-500877595362}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,18 +65,47 @@ Global
 		{8193EA21-BE33-480F-9025-702E9876E37D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8193EA21-BE33-480F-9025-702E9876E37D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8193EA21-BE33-480F-9025-702E9876E37D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF3D97FE-6761-459C-82E0-C277587A1EC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3D97FE-6761-459C-82E0-C277587A1EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3D97FE-6761-459C-82E0-C277587A1EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3D97FE-6761-459C-82E0-C277587A1EC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3BD3894-922D-4AFF-A566-70A97082B862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3BD3894-922D-4AFF-A566-70A97082B862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3BD3894-922D-4AFF-A566-70A97082B862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3BD3894-922D-4AFF-A566-70A97082B862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98511104-3515-4A4F-9765-E23B6086847C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98511104-3515-4A4F-9765-E23B6086847C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98511104-3515-4A4F-9765-E23B6086847C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98511104-3515-4A4F-9765-E23B6086847C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29900E2C-DE9C-4C53-8C6E-85E43342EB10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29900E2C-DE9C-4C53-8C6E-85E43342EB10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29900E2C-DE9C-4C53-8C6E-85E43342EB10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29900E2C-DE9C-4C53-8C6E-85E43342EB10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC34D94-8219-484A-B70D-E144EB99BD0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC34D94-8219-484A-B70D-E144EB99BD0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC34D94-8219-484A-B70D-E144EB99BD0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC34D94-8219-484A-B70D-E144EB99BD0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA49DD50-B3EB-4C38-BE80-935448B01BA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C99C0CE6-1D38-44F9-8C73-D9CB3E0F05CD} = {BCDE5751-D407-4B78-88F3-43596E945EF8}
 		{085CDB9A-A60E-474B-8838-500877595362} = {A3491B55-12B5-4757-ACBE-3E98322DDF7C}
 		{CC19D404-179C-4929-A7FA-74C4FFC3F64E} = {A3491B55-12B5-4757-ACBE-3E98322DDF7C}
 		{B2D44C8E-EC61-484A-A6D6-3476549F7D41} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 		{A622CF9C-9EAD-486A-93FB-782161E6E674} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 		{F91BD748-2623-4750-80DC-99490E20A9A7} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 		{8193EA21-BE33-480F-9025-702E9876E37D} = {C58B9D3A-C263-4A6B-BF83-E0506441720F}
+		{BF3D97FE-6761-459C-82E0-C277587A1EC0} = {BCDE5751-D407-4B78-88F3-43596E945EF8}
+		{A3BD3894-922D-4AFF-A566-70A97082B862} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
+		{98511104-3515-4A4F-9765-E23B6086847C} = {A3491B55-12B5-4757-ACBE-3E98322DDF7C}
+		{29900E2C-DE9C-4C53-8C6E-85E43342EB10} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
+		{AAC34D94-8219-484A-B70D-E144EB99BD0B} = {BCDE5751-D407-4B78-88F3-43596E945EF8}
+		{FA49DD50-B3EB-4C38-BE80-935448B01BA3} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC544335-5FBF-4123-9225-066AA7019530}
