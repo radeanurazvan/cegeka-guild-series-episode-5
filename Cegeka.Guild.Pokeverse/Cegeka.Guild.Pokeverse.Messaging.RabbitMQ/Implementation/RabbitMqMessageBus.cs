@@ -22,7 +22,7 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
 
         public Task Publish<T>(T message) where T : IMessage
         {
-            var exchangeName = typeof(T).GetExchangeName();
+            var exchangeName = message.GetType().GetExchangeName();
 
             model.ExchangeDeclare(exchangeName, ExchangeType.Fanout);
             var body = Encoding.UTF8.GetBytes(message.ToJson());
@@ -73,6 +73,10 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
                 using (var scope = provider.CreateScope())
                 {
                     var handler = scope.ServiceProvider.GetService(handlerType) as IMessageHandler<T>;
+                    if (handler == null)
+                    {
+                        throw new InvalidOperationException($"Handler {handlerType.Name} is not registered!");
+                    }
                     await handler.Handle(jsonEvent);
                 }
             };

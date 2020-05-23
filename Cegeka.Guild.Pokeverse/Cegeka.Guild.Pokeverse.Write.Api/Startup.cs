@@ -45,6 +45,7 @@ namespace Cegeka.Guild.Pokeverse.Api
                 .UseRouting()
                 .UseAuthorization()
                 .UseRabbitMqEventsLogging()
+                .UseSubscriptions()
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();

@@ -13,8 +13,4 @@
     <ProjectReference Include="..\Cegeka.Guild.Pokeverse.Domain\Cegeka.Guild.Pokeverse.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Battles\Events\" />
-  </ItemGroup>
-
 </Project>

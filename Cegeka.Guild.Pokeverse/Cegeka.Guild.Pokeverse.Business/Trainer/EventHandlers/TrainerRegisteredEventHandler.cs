@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Cegeka.Guild.Pokeverse.Common;
 using Cegeka.Guild.Pokeverse.Domain;
-using MediatR;
 
 namespace Cegeka.Guild.Pokeverse.Business
 {
-    internal sealed class TrainerRegisteredEventHandler : INotificationHandler<TrainerRegisteredEvent>
+    internal sealed class TrainerRegisteredEventHandler : IMessageHandler<TrainerRegisteredEvent>
     {
         private const int RandomPokemonsOnRegister = 2;
 
@@ -25,9 +24,9 @@ namespace Cegeka.Guild.Pokeverse.Business
             this.pokemonWriteRepository = pokemonWriteRepository;
         }
 
-        public async Task Handle(TrainerRegisteredEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(TrainerRegisteredEvent @event)
         {
-            var trainer = (await this.trainersReadRepository.GetById(notification.Id)).Value;
+            var trainer = (await this.trainersReadRepository.GetById(@event.Id)).Value;
 
             var random = new Random(DateTime.Now.Millisecond);
             var pokemons = await this.definitionsReadRepository.GetAll();

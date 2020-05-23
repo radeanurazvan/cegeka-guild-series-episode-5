@@ -1,4 +1,7 @@
-﻿using Cegeka.Guild.Pokeverse.Persistence.EntityFramework;
+﻿using Cegeka.Guild.Pokeverse.Business;
+using Cegeka.Guild.Pokeverse.Domain;
+using Cegeka.Guild.Pokeverse.Persistence.EntityFramework;
+using Cegeka.Guild.Pokeverse.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +18,16 @@ namespace Cegeka.Guild.Pokeverse.Infrastructure
             }
             
             return app;
-        } 
+        }
+
+        public static IApplicationBuilder UseSubscriptions(this IApplicationBuilder app)
+        {
+            var messageBus = app.ApplicationServices.GetService<IMessageBus>();
+            messageBus.Subscribe<BattleEndedEvent>().GetAwaiter().GetResult();
+            messageBus.Subscribe<TrainerRegisteredEvent>().GetAwaiter().GetResult();
+            messageBus.Subscribe<ExperienceGainedEvent>().GetAwaiter().GetResult();
+
+            return app;
+        }
     }
 }
