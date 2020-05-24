@@ -5,8 +5,6 @@
         public string BattleId { get; set; }
 
         public BattleStatus Status { get; set; }
-        
-        public int ExperienceGained { get; set; }
 
         public string Pokemon { get; set; }
 
