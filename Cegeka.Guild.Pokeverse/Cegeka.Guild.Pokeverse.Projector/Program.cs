@@ -30,7 +30,8 @@ namespace Cegeka.Guild.Pokeverse.Projector
             return services.AddSingleton<IConfiguration>(configuration)
                 .AddMongoStorage()
                 .AddRabbitMqBus()
-                .AddProjectorSubscriptions();
+                .AddProjectorSubscriptions()
+                .AddProjectors();
         }
     }
 }

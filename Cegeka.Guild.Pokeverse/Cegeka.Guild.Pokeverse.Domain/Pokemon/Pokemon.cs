@@ -21,6 +21,8 @@ namespace Cegeka.Guild.Pokeverse.Domain
             TrainerId = trainer.Id;
             Stats = PokemonStats.Default;
             Level = PokemonLevel.Default();
+
+            this.AddDomainEvent(new PokemonCreatedEvent(this));
         }
 
         public static Result<Pokemon> Create(Trainer trainer, PokemonDefinition definition)
@@ -80,7 +82,8 @@ namespace Cegeka.Guild.Pokeverse.Domain
         public Result LevelUp()
         {
             return this.Level.Next()
-                .Tap(l => this.Level = l);
+                .Tap(l => this.Level = l)
+                .Tap(() => this.AddDomainEvent(new PokemonLeveledUpEvent(this)));
         }
 
         private bool IsInBattle => this.battles.Any(b => b.Battle.IsOnGoing);
