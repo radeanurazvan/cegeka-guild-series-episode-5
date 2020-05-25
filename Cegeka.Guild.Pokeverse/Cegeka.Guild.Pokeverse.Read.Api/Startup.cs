@@ -1,3 +1,4 @@
+using Cegeka.Guild.Pokeverse.Persistence.Mongo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +18,9 @@ namespace Cegeka.Guild.Pokeverse.Read.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddMongoStorage()
+                .AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
