@@ -60,12 +60,13 @@ namespace Cegeka.Guild.Pokeverse.Projector
             });
         }
 
-        public Task Handle(PokemonCreatedEvent @event)
+        public async Task Handle(PokemonCreatedEvent @event)
         {
-            return mongoStorage.Update<Trainer>(@event.TrainerId.ToString(), trainer =>
+            await mongoStorage.Update<Trainer>(@event.TrainerId.ToString(), trainer =>
             {
                 trainer.Pokemons.Add(new Pokemon
                 {
+                    Id = @event.Id.ToString(),
                     Name = @event.Name,
                     Level = 1,
                     Stats = new PokemonStats

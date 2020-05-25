@@ -19,6 +19,8 @@ namespace Cegeka.Guild.Pokeverse.Projector
             await messageBus.Subscribe<TrainerRegisteredEvent>();
             await messageBus.Subscribe<ExperienceGainedEvent>();
             await messageBus.Subscribe<BattleEndedEvent>();
+            await messageBus.Subscribe<PokemonCreatedEvent>();
+            await messageBus.Subscribe<PokemonLeveledUpEvent>();
         }
     }
 }

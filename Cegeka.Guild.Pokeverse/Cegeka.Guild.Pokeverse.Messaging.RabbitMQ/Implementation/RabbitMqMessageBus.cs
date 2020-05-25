@@ -55,13 +55,16 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
             var topic = typeof(T).GetExchangeName();
 
             model.ExchangeDeclare(topic, ExchangeType.Fanout);
-            var queueName = model.QueueDeclare(handler.FullName, true, false, false).QueueName;
-            model.QueueBind(queueName, topic, handler.FullName);
+            model.BasicQos(0, 1, true);
+
+            var routingKey = $"{handler.FullName}__{topic}";
+            var queueName = model.QueueDeclare(routingKey, true, false, false).QueueName;
+            model.QueueBind(queueName, topic, routingKey);
 
             var consumer = new EventingBasicConsumer(model);
             consumer.Received += Consume<T>(handler);
 
-            model.BasicConsume(queueName, true, consumer);
+            model.BasicConsume(queueName, false, consumer);
         }
 
         private EventHandler<BasicDeliverEventArgs> Consume<T>(Type handlerType)
@@ -81,6 +84,7 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
                     }
 
                     await handler.Handle(jsonEvent);
+                    model.BasicAck(args.DeliveryTag, false);
                 }
             };
         }

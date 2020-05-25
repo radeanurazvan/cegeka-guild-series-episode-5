@@ -1,4 +1,5 @@
-﻿using Cegeka.Guild.Pokeverse.Common;
+﻿using Cegeka.Guild.Pokeverse.Business;
+using Cegeka.Guild.Pokeverse.Common;
 using Cegeka.Guild.Pokeverse.Domain;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +15,10 @@ namespace Cegeka.Guild.Pokeverse.Projector
         public static IServiceCollection AddProjectors(this IServiceCollection services)
         {
             return services
-                .AddMessageHandler<TrainerRegisteredEvent, TrainerProjector>();
+                .AddMessageHandler<TrainerRegisteredEvent, TrainerProjector>()
+                .AddMessageHandler<PokemonCreatedEvent, TrainerProjector>()
+                .AddMessageHandler<BattleEndedEvent, TrainerProjector>()
+                .AddMessageHandler<PokemonLeveledUpEvent, TrainerProjector>();
         }
     }
 }
