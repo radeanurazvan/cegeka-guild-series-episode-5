@@ -22,7 +22,7 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Ignore(p => p.Battles);
-            builder.HasMany(Pokemon.Expressions.Battles)
+            builder.HasMany(typeof(PokemonBattle), Pokemon.Expressions.Battles)
                 .WithOne()
                 .HasPrincipalKey(nameof(Pokemon.Id))
                 .HasForeignKey(nameof(PokemonBattle.PokemonId));

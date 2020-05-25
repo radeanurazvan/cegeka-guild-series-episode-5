@@ -21,7 +21,7 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
 
         public Task Add(T entity)
         {
-            context.Set<T>().AddAsync(entity);
+            context.Set<T>().Add(entity);
             return Task.CompletedTask;
         }
 

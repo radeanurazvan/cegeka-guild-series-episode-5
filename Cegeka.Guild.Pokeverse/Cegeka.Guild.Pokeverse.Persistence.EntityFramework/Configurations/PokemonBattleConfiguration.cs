@@ -14,12 +14,12 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
             builder.HasOne(typeof(Pokemon))
                 .WithMany(Pokemon.Expressions.Battles)
                 .HasPrincipalKey(nameof(Pokemon.Id))
-                .HasForeignKey(nameof(PokemonBattle.BattleId));
+                .HasForeignKey(nameof(PokemonBattle.PokemonId));
 
             builder.HasOne(b => b.Battle)
-                .WithOne()
-                .HasPrincipalKey<Battle>(nameof(Battle.Id))
-                .HasForeignKey<PokemonBattle>(nameof(PokemonBattle.BattleId));
+                .WithMany()
+                .HasPrincipalKey(nameof(Battle.Id))
+                .HasForeignKey(nameof(PokemonBattle.BattleId));
         }
     }
 }

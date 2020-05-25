@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Cegeka.Guild.Pokeverse.Common;
 using Cegeka.Guild.Pokeverse.RabbitMQ.ContractResolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Polly;
+using Polly.Contrib.WaitAndRetry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -12,6 +15,8 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
 {
     internal sealed class RabbitMqMessageBus :IMessageBus
     {
+        private static Random Random = new Random(DateTime.Now.Millisecond);
+
         private readonly IModel model;
         private readonly IServiceProvider provider;
 
@@ -62,32 +67,55 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
             model.QueueBind(queueName, topic, routingKey);
 
             var consumer = new EventingBasicConsumer(model);
-            consumer.Received += Consume<T>(handler);
+            consumer.Received += async (_, args) => await ConsumeWithRetries<T>(handler, args);
 
             model.BasicConsume(queueName, false, consumer);
         }
 
-        private EventHandler<BasicDeliverEventArgs> Consume<T>(Type handlerType)
+        private async Task ConsumeWithRetries<T>(Type handlerType, BasicDeliverEventArgs args)
             where T : IMessage
         {
-            return async (_, args) =>
-            {
-                var json = args.Body.ToArray().ToUtf8String();
-                var jsonEvent = json.DeserializerObject<T>();
+            var waitAndRetry = Policy.Handle<Exception>()
+                .WaitAndRetryAsync(BackOffDelay, (e, t, c) => Console.WriteLine($"Retrying message {args.DeliveryTag} from exchange {args.Exchange} due to exception {e.Message} at {e.StackTrace}"));
 
-                using (var scope = provider.CreateScope())
+            await Policy.Handle<Exception>()
+                .FallbackAsync(
+                    _ => Task.Run(() => model.BasicNack(args.DeliveryTag, false, false), _),
+                    e => Task.Run(() => Console.WriteLine($"Nacked event {args.DeliveryTag} from exchange {args.Exchange} due to exception {e.Message} at {e.StackTrace}")))
+                .WrapAsync(waitAndRetry)
+                .ExecuteAsync(async () =>
                 {
-                    var handler = scope.ServiceProvider.GetService(handlerType) as IMessageHandler<T>;
-                    if (handler == null)
+                    await Consume<T>(handlerType, args);
+                    if (Random.Next(0, 100) <= 50)
                     {
-                        throw new InvalidOperationException($"Handler {handlerType.Name} not registered!");
+                        throw new InvalidOperationException("You failed, try again");
                     }
 
-                    await handler.Handle(jsonEvent);
                     model.BasicAck(args.DeliveryTag, false);
-                }
-            };
+
+                    Console.WriteLine($"Event {args.DeliveryTag} from exchange {args.Exchange} successfully handled");
+                });
         }
+
+        private async Task Consume<T>(Type handlerType, BasicDeliverEventArgs args)
+            where T : IMessage
+        {
+            var json = args.Body.ToArray().ToUtf8String();
+            var jsonEvent = json.DeserializerObject<T>();
+
+            using (var scope = provider.CreateScope())
+            {
+                var handler = scope.ServiceProvider.GetService(handlerType) as IMessageHandler<T>;
+                if (handler == null)
+                {
+                    throw new InvalidOperationException($"Handler {handlerType.Name} not registered!");
+                }
+
+                await handler.Handle(jsonEvent);
+            }
+        }
+
+        private IEnumerable<TimeSpan> BackOffDelay => Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 3);
     }
 
 
@@ -102,6 +130,7 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
         {
             return JsonConvert.SerializeObject(message, new JsonSerializerSettings
             {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                 ContractResolver = new PrivateCamelCasePropertyContractResolver(),
             });
         }
@@ -110,6 +139,7 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
         {
             return JsonConvert.DeserializeObject<T>(objectAsString, new JsonSerializerSettings
             {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                 ContractResolver = new PrivateCamelCasePropertyContractResolver(),
             });
         }

@@ -59,6 +59,7 @@ namespace Cegeka.Guild.Pokeverse.Domain
                 .Ensure(() => !this.IsInBattle, Messages.PokemonAlreadyInBattle)
                 .Ensure(() => !other.IsInBattle, Messages.PokemonAlreadyInBattle)
                 .Map(() => Battle.Create(this, other))
+                .Tap(b => other.battles.Add(new PokemonBattle(other, b)))
                 .Tap(b => this.battles.Add(new PokemonBattle(this, b)));
         }
 

@@ -30,6 +30,11 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
                 .WithOne()
                 .HasForeignKey<Battle>(x => x.LoserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(typeof(PokemonBattle))
+                .WithOne(nameof(PokemonBattle.Battle))
+                .HasPrincipalKey(nameof(Battle.Id))
+                .HasForeignKey(nameof(PokemonBattle.BattleId));
         }
     }
 }

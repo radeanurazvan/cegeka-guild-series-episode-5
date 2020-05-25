@@ -22,6 +22,11 @@ namespace Cegeka.Guild.Pokeverse.Persistence.InMemory
             return Task.CompletedTask;
         }
 
+        public void Update(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task Save() => Task.CompletedTask;
     }
 }
