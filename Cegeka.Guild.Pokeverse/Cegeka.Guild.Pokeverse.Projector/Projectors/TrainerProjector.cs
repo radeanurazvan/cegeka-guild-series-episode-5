@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cegeka.Guild.Pokeverse.Business;
@@ -24,8 +25,15 @@ namespace Cegeka.Guild.Pokeverse.Projector
             this.mongoStorage = mongoStorage;
         }
 
-        public Task Handle(TrainerRegisteredEvent @event)
+        public async Task Handle(TrainerRegisteredEvent @event)
         {
+            var duplicateTrainer = await mongoStorage.FindOne<Trainer>(t => t.Id == @event.Id.ToString());
+            if (duplicateTrainer.HasValue)
+            {
+                Console.WriteLine($"Trainer {@event.Id}:{@event.Name} already projected, not projecting anymore");
+                return;
+            }
+
             var trainer = new Trainer
             {
                 Id = @event.Id.ToString(),
@@ -34,13 +42,19 @@ namespace Cegeka.Guild.Pokeverse.Projector
                 BattleHistories = new List<BattleHistory>()
             };
 
-            return mongoStorage.Create(trainer);
+            await mongoStorage.Create(trainer);
         }
 
         public async Task Handle(BattleEndedEvent @event)
         {
             await mongoStorage.Update<Trainer>(@event.WinnerTrainerId.ToString(), trainer =>
             {
+                if(trainer.BattleHistories.Any(h => h.BattleId == @event.BattleId.ToString()))
+                {
+                    Console.WriteLine($"Battle history already exists for battle {@event.BattleId} and trainer {@event.WinnerTrainerId}");
+                    return;
+                }
+
                 trainer.BattleHistories.Add(new BattleHistory
                 {
                     BattleId = @event.BattleId.ToString(),
@@ -51,6 +65,12 @@ namespace Cegeka.Guild.Pokeverse.Projector
 
             await mongoStorage.Update<Trainer>(@event.LoserTrainerId.ToString(), trainer =>
             {
+                if (trainer.BattleHistories.Any(h => h.BattleId == @event.BattleId.ToString()))
+                {
+                    Console.WriteLine($"Battle history already exists for battle {@event.BattleId} and trainer {@event.LoserTrainerId}");
+                    return;
+                }
+
                 trainer.BattleHistories.Add(new BattleHistory
                 {
                     BattleId = @event.BattleId.ToString(),
@@ -64,6 +84,12 @@ namespace Cegeka.Guild.Pokeverse.Projector
         {
             await mongoStorage.Update<Trainer>(@event.TrainerId.ToString(), trainer =>
             {
+                if (trainer.Pokemons.Any(p => p.Id == @event.Id.ToString()))
+                {
+                    Console.WriteLine($"Pokemon {@event.Id}:{@event.Name} already exists for trainer {@event.TrainerId}");
+                    return;
+                }
+
                 trainer.Pokemons.Add(new Pokemon
                 {
                     Id = @event.Id.ToString(),
