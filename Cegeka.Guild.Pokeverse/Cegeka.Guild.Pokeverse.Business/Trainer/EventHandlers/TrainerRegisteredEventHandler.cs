@@ -27,6 +27,10 @@ namespace Cegeka.Guild.Pokeverse.Business
         public async Task Handle(TrainerRegisteredEvent @event)
         {
             var trainer = (await this.trainersReadRepository.GetById(@event.Id)).Value;
+            if (trainer.Pokemons.Any())
+            {
+                return;
+            }
 
             var random = new Random(DateTime.Now.Millisecond);
             var pokemons = await this.definitionsReadRepository.GetAll();
