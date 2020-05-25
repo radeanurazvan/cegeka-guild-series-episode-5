@@ -8,6 +8,9 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
     {
         public void Configure(EntityTypeBuilder<Pokemon> builder)
         {
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).ValueGeneratedNever();
+
             builder.HasOne<Trainer>()
                 .WithMany(x => x.Pokemons)
                 .HasForeignKey(x => x.TrainerId);

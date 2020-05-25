@@ -23,7 +23,7 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            var list = await entities.AsNoTracking().ToListAsync();
+            var list = await entities.ToListAsync();
             return list;
         }
 

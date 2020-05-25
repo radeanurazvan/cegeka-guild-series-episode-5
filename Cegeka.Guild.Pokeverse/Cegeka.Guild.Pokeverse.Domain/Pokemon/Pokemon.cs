@@ -18,6 +18,7 @@ namespace Cegeka.Guild.Pokeverse.Domain
         private Pokemon(Trainer trainer, PokemonDefinition definition) : this()
         {
             DefinitionId = definition.Id;
+            Definition = definition;
             TrainerId = trainer.Id;
             Stats = PokemonStats.Default;
             Level = PokemonLevel.Default();
