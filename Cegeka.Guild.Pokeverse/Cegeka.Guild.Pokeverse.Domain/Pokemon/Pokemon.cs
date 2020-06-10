@@ -9,7 +9,7 @@ namespace Cegeka.Guild.Pokeverse.Domain
 {
     public class Pokemon : AggregateRoot
     {
-        private readonly ICollection<PokemonBattle> battles = new List<PokemonBattle>();
+        //private readonly ICollection<PokemonBattle> battles = new List<PokemonBattle>();
 
         private Pokemon()
         {
@@ -49,31 +49,29 @@ namespace Cegeka.Guild.Pokeverse.Domain
 
         public IEnumerable<Ability> Abilities => this.Definition.Abilities.Where(a => a.RequiredLevel <= Level);
 
-        public IEnumerable<PokemonBattle> Battles => this.battles;
+        //public IEnumerable<PokemonBattle> Battles => this.battles;
 
         public Result<Battle> Attack(Pokemon other)
         {
             return Result.FailureIf(other == null, Messages.InvalidPokemon)
                 .Ensure(() => this != other, Messages.CannotFightItself)
                 .Ensure(() => this.TrainerId != other.TrainerId, Messages.SiblingsCannotFight)
-                .Ensure(() => !this.IsInBattle, Messages.PokemonAlreadyInBattle)
-                .Ensure(() => !other.IsInBattle, Messages.PokemonAlreadyInBattle)
-                .Map(() => Battle.Create(this, other))
-                .Tap(b => other.battles.Add(new PokemonBattle(other, b)))
-                .Tap(b => this.battles.Add(new PokemonBattle(this, b)));
+                //.Ensure(() => !this.IsInBattle, Messages.PokemonAlreadyInBattle)
+                //.Ensure(() => !other.IsInBattle, Messages.PokemonAlreadyInBattle)
+                .Map(() => Battle.Create(this, other));
         }
 
-        public Result UseAbility(Guid battleId, Guid abilityId)
-        {
-            var abilityResult = this.Definition.Abilities.FirstOrNothing(a => a.Id == abilityId).ToResult(Messages.UnknownAbility)
-                .Ensure(a => a.RequiredLevel <= Level, Messages.CannotUseAbility);
-            var battleResult = this.battles.FirstOrNothing(b => b.BattleId == battleId).Select(b => b.Battle).ToResult(Messages.BattleDoesNotExist)
-                .Ensure(b => b.IsOnGoing, Messages.BattleHasEnded)
-                .Ensure(b => b.ActivePlayer == this.Id, Messages.NotYourTurn);
+        //public Result UseAbility(Guid battleId, Guid abilityId)
+        //{
+        //    var abilityResult = this.Definition.Abilities.FirstOrNothing(a => a.Id == abilityId).ToResult(Messages.UnknownAbility)
+        //        .Ensure(a => a.RequiredLevel <= Level, Messages.CannotUseAbility);
+        //    var battleResult = this.battles.FirstOrNothing(b => b.BattleId == battleId).Select(b => b.Battle).ToResult(Messages.BattleDoesNotExist)
+        //        .Ensure(b => b.IsOnGoing, Messages.BattleHasEnded)
+        //        .Ensure(b => b.ActivePlayer == this.Id, Messages.NotYourTurn);
 
-            return Result.FirstFailureOrSuccess(abilityResult, battleResult)
-                .Bind(() => battleResult.Value.TakeTurn(this.Id, abilityResult.Value));
-        }
+        //    return Result.FirstFailureOrSuccess(abilityResult, battleResult)
+        //        .Bind(() => battleResult.Value.TakeTurn(this.Id, abilityResult.Value));
+        //}
 
         internal void CollectExperience(int points)
         {
@@ -86,13 +84,6 @@ namespace Cegeka.Guild.Pokeverse.Domain
             return this.Level.Next()
                 .Tap(l => this.Level = l)
                 .Tap(() => this.AddDomainEvent(new PokemonLeveledUpEvent(this)));
-        }
-
-        private bool IsInBattle => this.battles.Any(b => b.Battle.IsOnGoing);
-
-        public static class Expressions
-        {
-            public static string Battles = nameof(battles);
         }
     }
 }

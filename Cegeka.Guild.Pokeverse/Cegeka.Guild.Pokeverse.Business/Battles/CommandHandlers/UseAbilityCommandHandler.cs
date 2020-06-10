@@ -16,11 +16,16 @@ namespace Cegeka.Guild.Pokeverse.Business
             this.mediator = mediator;
         }
 
-        public Task<Result> Handle(UseAbilityCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(UseAbilityCommand request, CancellationToken cancellationToken)
         {
-            var player = this.mediator.Read<Pokemon>().GetById(request.ParticipantId).ToResult(Messages.PokemonDoesNotExist);
-            return player.Bind(p => p.UseAbility(request.BattleId, request.AbilityId))
-                .Tap(() => this.mediator.Write<Battle>().Save());
+            var battleResult = await this.mediator.Read<Battle>().GetById(request.BattleId).ToResult(Messages.BattleDoesNotExist);
+            var abilityResult = await this.mediator.Read<Pokemon>().GetById(request.ParticipantId).ToResult(Messages.PokemonDoesNotExist)
+                .Map(p => p.Abilities.TryFirst(a => a.Id == request.AbilityId))
+                .Bind(a => a.ToResult(Messages.UnknownAbility));
+
+            return await Result.FirstFailureOrSuccess(battleResult, abilityResult)
+                .Bind(() => battleResult.Value.TakeTurn(request.ParticipantId, abilityResult.Value))
+                .Tap(() => mediator.Write<Battle>().Save());
         }
     }
 }

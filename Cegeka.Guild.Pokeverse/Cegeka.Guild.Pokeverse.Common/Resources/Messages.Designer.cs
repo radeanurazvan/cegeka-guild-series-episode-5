@@ -160,6 +160,15 @@ namespace Cegeka.Guild.Pokeverse.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This pokemon was already rewarded!.
+        /// </summary>
+        public static string PokemonAlreadyRewarded {
+            get {
+                return ResourceManager.GetString("PokemonAlreadyRewarded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given pokemon does not exist!.
         /// </summary>
         public static string PokemonDoesNotExist {

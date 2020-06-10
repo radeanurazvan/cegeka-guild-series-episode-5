@@ -8,9 +8,6 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
     {
         public void Configure(EntityTypeBuilder<Pokemon> builder)
         {
-            builder.HasKey(p => p.Id);
-            builder.Property(p => p.Id).ValueGeneratedNever();
-
             builder.HasOne<Trainer>()
                 .WithMany(x => x.Pokemons)
                 .HasForeignKey(x => x.TrainerId);
@@ -20,12 +17,6 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
                 .WithMany()
                 .HasForeignKey(x => x.DefinitionId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            builder.Ignore(p => p.Battles);
-            builder.HasMany(typeof(PokemonBattle), Pokemon.Expressions.Battles)
-                .WithOne()
-                .HasPrincipalKey(nameof(Pokemon.Id))
-                .HasForeignKey(nameof(PokemonBattle.PokemonId));
 
             builder.OwnsOne(p => p.Stats, s =>
             {

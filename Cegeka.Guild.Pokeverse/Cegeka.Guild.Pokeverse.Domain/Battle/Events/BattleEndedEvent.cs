@@ -11,12 +11,13 @@ namespace Cegeka.Guild.Pokeverse.Business
         }
 
         internal BattleEndedEvent(Battle battle)
+            : this()
         {
             BattleId = battle.Id;
-            WinnerTrainerId = battle.Winner.TrainerId;
-            WinnerPokemon = battle.Winner.Name;
-            LoserTrainerId = battle.Loser.TrainerId;
-            LoserPokemon = battle.Loser.Name;
+            WinnerTrainerId = battle.Winner.Value.TrainerId;
+            WinnerPokemon = battle.Winner.Value.Name;
+            LoserTrainerId = battle.Loser.Value.TrainerId;
+            LoserPokemon = battle.Loser.Value.Name;
         }
 
         public Guid BattleId { get; private set; }

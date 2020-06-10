@@ -19,8 +19,6 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
 
         public DbSet<Trainer> Trainers { get; private set; }
 
-        public DbSet<Battle> Battles { get; private set; }
-
         public static DbContextOptions GetOptions() => new DbContextOptionsBuilder()
             .UseSqlServer("Data Source=.; Initial Catalog=Pokeverse;User=sa;Password=Pass4Dev1!;")
             .Options;

@@ -150,6 +150,9 @@
   <data name="PokemonAlreadyInBattle" xml:space="preserve">
     <value>Pokemon is already in battle!</value>
   </data>
+  <data name="PokemonAlreadyRewarded" xml:space="preserve">
+    <value>This pokemon was already rewarded!</value>
+  </data>
   <data name="PokemonDoesNotExist" xml:space="preserve">
     <value>The given pokemon does not exist!</value>
   </data>
