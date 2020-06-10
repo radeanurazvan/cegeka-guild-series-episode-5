@@ -1,5 +1,4 @@
-﻿using Cegeka.Guild.Pokeverse.Business;
-using Cegeka.Guild.Pokeverse.Common;
+﻿using Cegeka.Guild.Pokeverse.Common;
 using Cegeka.Guild.Pokeverse.Domain;
 using Microsoft.Extensions.DependencyInjection;
 

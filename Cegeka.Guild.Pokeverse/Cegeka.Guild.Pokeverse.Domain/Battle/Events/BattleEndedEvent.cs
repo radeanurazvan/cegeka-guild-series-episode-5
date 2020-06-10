@@ -1,8 +1,7 @@
 ﻿using System;
 using Cegeka.Guild.Pokeverse.Common;
-using Cegeka.Guild.Pokeverse.Domain;
 
-namespace Cegeka.Guild.Pokeverse.Business
+namespace Cegeka.Guild.Pokeverse.Domain
 {
     public sealed class BattleEndedEvent : IDomainEvent
     {
@@ -18,6 +17,7 @@ namespace Cegeka.Guild.Pokeverse.Business
             WinnerPokemon = battle.Winner.Value.Name;
             LoserTrainerId = battle.Loser.Value.TrainerId;
             LoserPokemon = battle.Loser.Value.Name;
+            EndedAt = DateTime.UtcNow;
         }
 
         public Guid BattleId { get; private set; }
@@ -29,5 +29,7 @@ namespace Cegeka.Guild.Pokeverse.Business
         public Guid LoserTrainerId { get; private set; }
 
         public string LoserPokemon { get; private set; }
+
+        public DateTime EndedAt { get; private set; }
     }
 }

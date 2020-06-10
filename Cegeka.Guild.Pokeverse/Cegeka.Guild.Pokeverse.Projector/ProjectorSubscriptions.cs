@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Cegeka.Guild.Pokeverse.Business;
 using Cegeka.Guild.Pokeverse.Domain;
 using Cegeka.Guild.Pokeverse.RabbitMQ;
 

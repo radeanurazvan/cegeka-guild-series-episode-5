@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cegeka.Guild.Pokeverse.Business;
 using Cegeka.Guild.Pokeverse.Common;
 using Cegeka.Guild.Pokeverse.Common.Resources;
 using CSharpFunctionalExtensions;
 
 namespace Cegeka.Guild.Pokeverse.Domain
 {
-    public sealed class Battle : AggregateRoot
+    public sealed partial class Battle : AggregateRoot
     {
         private readonly ISet<Guid> rewardedParticipants = new HashSet<Guid>();
 
         private Battle()
         {
-            StartedAt = DateTime.Now;
         }
 
-        internal static Battle Create(Pokemon attacker, Pokemon defender)
+        private Battle(Pokemon attacker, Pokemon defender)
+            : this()
         {
-            return new Battle
-            {
-                ActivePlayer = attacker.Id,
-                Attacker =  new PokemonInFight(attacker),
-                Defender = new PokemonInFight(defender),
-            };
+            ReactToDomainEvent(new BattleStartedEvent(this, attacker, defender));
+        }
+
+        internal static Result<Battle> Create(Pokemon attacker, Pokemon defender)
+        {
+            var attackerResult = Maybe<Pokemon>.From(attacker).ToResult(Messages.InvalidPokemon);
+            var defenderResult = Maybe<Pokemon>.From(defender).ToResult(Messages.InvalidPokemon);
+
+            return Result.FirstFailureOrSuccess(attackerResult, defenderResult)
+                .Map(() => new Battle(attacker, defender));
         }
 
         public PokemonInFight Attacker { get; private set; }
@@ -34,15 +37,15 @@ namespace Cegeka.Guild.Pokeverse.Domain
 
         public DateTime StartedAt { get; private set; }
 
-        public Maybe<DateTime> FinishedAt { get; private set; }
+        public Maybe<DateTime> FinishedAt { get; private set; } = Maybe<DateTime>.None;
 
-        public Maybe<Guid> WinnerId { get; private set; }
+        public Maybe<PokemonInFight> Winner => Attacker.Fainted ? Defender : Defender.Fainted ? Attacker : Maybe<PokemonInFight>.None;
 
-        public Maybe<PokemonInFight> Winner { get; private set; }
+        public Maybe<Guid> WinnerId => Winner.Select(w => w.Id);
 
-        public Maybe<Guid> LoserId { get; private set; }
-
-        public Maybe<PokemonInFight> Loser { get; private set; }
+        public Maybe<PokemonInFight> Loser => Attacker.Fainted ? Attacker : Defender.Fainted ? Defender : Maybe<PokemonInFight>.None;
+        
+        public Maybe<Guid> LoserId => Loser.Select(l => l.Id);
 
         public bool IsOnGoing => FinishedAt.HasNoValue;
 
@@ -50,10 +53,8 @@ namespace Cegeka.Guild.Pokeverse.Domain
         {
             return Result.SuccessIf(IsOnGoing, Messages.BattleHasEnded)
                 .Ensure(() => ActivePlayer == player, Messages.NotYourTurn)
-                .Map(() => Attacker.Id == player ? Defender : Attacker)
-                .Tap(victim => victim.TakeDamage(ability.Damage))
-                .Tap(victim => ActivePlayer = victim.Id)
-                .TapIf(Attacker.Fainted || Defender.Fainted, ConcludeBattle);
+                .Tap(() => ReactToDomainEvent(new PlayerTookTurnEvent(this, player, ability)))
+                .Tap(ConcludeBattle);
         }
 
         public Result Award(Pokemon pokemon)
@@ -62,16 +63,13 @@ namespace Cegeka.Guild.Pokeverse.Domain
                 .Ensure(() => pokemon.Id == WinnerId || pokemon.Id == LoserId, Messages.InvalidPokemon)
                 .Ensure(() => !rewardedParticipants.Contains(pokemon.Id), Messages.PokemonAlreadyRewarded)
                 .Map(() => pokemon.Id == LoserId ? BattleExperience.ForLoser() : BattleExperience.ForWinner())
-                .Tap(pokemon.CollectExperience);
+                .Tap(experiencePoints => ReactToDomainEvent(new PlayerAwardedEvent(this, pokemon.Id, experiencePoints)));
         }
 
-        private void ConcludeBattle(PokemonInFight victim)
+        private Result ConcludeBattle()
         {
-            this.LoserId = victim.Id;
-            this.WinnerId = victim.Id == Attacker.Id ? Defender.Id : Attacker.Id;
-
-            this.FinishedAt = DateTime.Now;
-            this.AddDomainEvent(new BattleEndedEvent(this));
+            return Result.SuccessIf(Attacker.Fainted || Defender.Fainted, Messages.BattleIsOngoing)
+                .Tap(() => ReactToDomainEvent(new BattleEndedEvent(this)));
         }
     }
 }

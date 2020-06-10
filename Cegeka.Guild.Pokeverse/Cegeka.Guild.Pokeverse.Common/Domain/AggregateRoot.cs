@@ -1,15 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using CSharpFunctionalExtensions;
 
 namespace Cegeka.Guild.Pokeverse.Common
 {
-    public abstract class AggregateRoot : Entity
+    public interface IAggregateRoot
     {
+        string GetId();
+
+        IReadOnlyList<IDomainEvent> Events { get; }
+
+        void ClearEvents();
+    }
+
+    public abstract class AggregateRoot : Entity, IAggregateRoot
+    {
+        private readonly Dictionary<Type, MethodInfo> whenMethods;
         private readonly List<IDomainEvent> events = new List<IDomainEvent>();
 
-        public Guid GetId() => this.Id;
+        protected AggregateRoot()
+        {
+            this.whenMethods = GetPartitionedWhenMethods();
+        }
+
+        public string GetId() => this.Id.ToString();
 
         public IReadOnlyList<IDomainEvent> Events => events;
 
@@ -31,20 +47,32 @@ namespace Cegeka.Guild.Pokeverse.Common
             events.Clear();
         }
 
-        public async void Mutate<T>(T @event)
+        public void Mutate<T>(T @event)
             where T : IDomainEvent
         {
-            await Maybe<T>.From(@event)
-                .ToResult("Cannot mutate null event")
-                .Map(_ => GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
-                .Map(methods => methods.FirstOrNothing(m => m.Name == nameof(When) && m.GetParameters()[0].ParameterType == @event.GetType()))
-                .Bind(whenMethodOrNothing => whenMethodOrNothing.ToResult($"When method not found for {@event.GetType().Name}"))
-                .OnFailure(e => throw new InvalidOperationException(e))
-                .Tap(m => m.Invoke(this, new object[] { @event }));
+            if (@event == null)
+            {
+                throw new InvalidOperationException("Cannot mutate null event");
+            }
+
+            var hasWhenMethod = whenMethods.TryGetValue(@event.GetType(), out var whenMethod);
+            if (!hasWhenMethod)
+            {
+                throw new InvalidOperationException($"No When method defined for {@event.GetType().Name}");
+            }
+
+            whenMethod.Invoke(this, new object[] { @event });
         }
 
         private void When()
         {
+        }
+
+        private Dictionary<Type, MethodInfo> GetPartitionedWhenMethods()
+        {
+            return GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                .Where(m => m.Name == nameof(When) && m.GetParameters().Any())
+                .ToDictionary(m => m.GetParameters()[0].ParameterType, m => m);
         }
     }
 }

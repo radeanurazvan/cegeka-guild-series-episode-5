@@ -58,7 +58,7 @@ namespace Cegeka.Guild.Pokeverse.Domain
                 .Ensure(() => this.TrainerId != other.TrainerId, Messages.SiblingsCannotFight)
                 //.Ensure(() => !this.IsInBattle, Messages.PokemonAlreadyInBattle)
                 //.Ensure(() => !other.IsInBattle, Messages.PokemonAlreadyInBattle)
-                .Map(() => Battle.Create(this, other));
+                .Bind(() => Battle.Create(this, other));
         }
 
         //public Result UseAbility(Guid battleId, Guid abilityId)

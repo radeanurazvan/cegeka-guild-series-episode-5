@@ -15,6 +15,15 @@ namespace Cegeka.Guild.Pokeverse.Domain
             Health = pokemon.Stats.HealthPoints * 15;
         }
 
+        internal PokemonInFight(Guid id, string name, Guid trainerId, int health)
+            : this()
+        {
+            Id = id;
+            Name = name;
+            TrainerId = trainerId;
+            Health = health;
+        }
+
         public Guid Id { get; private set; }
         public string Name { get; private set; }
 
