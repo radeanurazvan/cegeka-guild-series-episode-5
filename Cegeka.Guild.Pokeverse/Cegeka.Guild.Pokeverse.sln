@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Writ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cegeka.Guild.Pokeverse.Messaging.RabbitMQ", "Cegeka.Guild.Pokeverse.Messaging.RabbitMQ\Cegeka.Guild.Pokeverse.Messaging.RabbitMQ.csproj", "{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cegeka.Guild.Pokeverse.Persistence.EventStoreDb", "Cegeka.Guild.Pokeverse.Persistence.EventStoreDb\Cegeka.Guild.Pokeverse.Persistence.EventStoreDb.csproj", "{E592999A-89FD-4FD9-AF4D-4200A7DF94F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,10 @@ Global
 		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E592999A-89FD-4FD9-AF4D-4200A7DF94F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E592999A-89FD-4FD9-AF4D-4200A7DF94F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E592999A-89FD-4FD9-AF4D-4200A7DF94F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E592999A-89FD-4FD9-AF4D-4200A7DF94F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{29900E2C-DE9C-4C53-8C6E-85E43342EB10} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 		{AAC34D94-8219-484A-B70D-E144EB99BD0B} = {BCDE5751-D407-4B78-88F3-43596E945EF8}
 		{02F0D26E-BF7A-41E8-86F9-F0460E541AA5} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
+		{E592999A-89FD-4FD9-AF4D-4200A7DF94F4} = {89692A89-F9DA-4565-B05D-059BFFB3B3B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC544335-5FBF-4123-9225-066AA7019530}

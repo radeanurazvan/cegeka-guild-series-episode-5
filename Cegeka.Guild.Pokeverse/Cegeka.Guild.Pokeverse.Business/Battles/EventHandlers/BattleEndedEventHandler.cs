@@ -20,8 +20,14 @@ namespace Cegeka.Guild.Pokeverse.Business
             var battleResult = await this.mediator.Read<Battle>().GetById(@event.BattleId).ToResult(Messages.BattleDoesNotExist);
 
             await battleResult
-                .Tap(b => Award(b, b.Attacker.Id))
-                .Tap(b => Award(b, b.Defender.Id));
+                .Tap(async b =>
+                {
+                    await Award(b, b.Attacker.Id);
+                    await Award(b, b.Defender.Id);
+
+                    await mediator.Write<Battle>().Save();
+                })
+                .Tap(() => mediator.Write<Pokemon>().Save());
         }
 
         private Task<Result> Award(Battle battle, Guid pokemonId)

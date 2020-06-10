@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 
 namespace Cegeka.Guild.Pokeverse.Common
@@ -18,6 +19,21 @@ namespace Cegeka.Guild.Pokeverse.Common
             {
                 return Maybe<T>.None;
             }
+        }
+
+        public static async Task<Maybe<T>> ToMaybe<T>(this Task<Result<T>> resultTask)
+        {
+            return (await resultTask).ToMaybe();
+        }
+
+        public static Maybe<T> ToMaybe<T>(this Result<T> result)
+        {
+            if (result.IsFailure)
+            {
+                return Maybe<T>.None;
+            }
+
+            return result.Value;
         }
 
         public static string GetFriendlyName(this Type type)

@@ -1,13 +1,16 @@
 using Cegeka.Guild.Pokeverse.Business;
 using Cegeka.Guild.Pokeverse.Infrastructure;
 using Cegeka.Guild.Pokeverse.Persistence.EntityFramework;
+using Cegeka.Guild.Pokeverse.Persistence.EventStoreDb;
 using Cegeka.Guild.Pokeverse.RabbitMQ;
+using Cegeka.Guild.Pokeverse.RabbitMQ.ContractResolvers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace Cegeka.Guild.Pokeverse.Api
 {
@@ -23,6 +26,13 @@ namespace Cegeka.Guild.Pokeverse.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var contractResolver = new PrivateCamelCasePropertyContractResolver();
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                ContractResolver = contractResolver
+            };
+
             services
                 .AddInfrastructure(Configuration)
                 .AddCore()
@@ -46,10 +56,8 @@ namespace Cegeka.Guild.Pokeverse.Api
                 .UseAuthorization()
                 .UseRabbitMqEventsLogging()
                 .UseSubscriptions()
-                .UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                })
+                .UseEventStore()
+                .UseEndpoints(endpoints => endpoints.MapControllers())
                 .UseMigrations()
                 .SeedData();
         }

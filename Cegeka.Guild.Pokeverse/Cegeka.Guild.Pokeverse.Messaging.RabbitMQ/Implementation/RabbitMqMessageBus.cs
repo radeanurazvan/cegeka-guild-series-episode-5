@@ -86,10 +86,10 @@ namespace Cegeka.Guild.Pokeverse.RabbitMQ
                 .ExecuteAsync(async () =>
                 {
                     await Consume<T>(handlerType, args);
-                    if (Random.Next(0, 100) <= 50)
-                    {
-                        throw new InvalidOperationException("You failed, try again");
-                    }
+                    //if (Random.Next(0, 100) <= 50)
+                    //{
+                    //    throw new InvalidOperationException("You failed, try again");
+                    //}
 
                     model.BasicAck(args.DeliveryTag, false);
 

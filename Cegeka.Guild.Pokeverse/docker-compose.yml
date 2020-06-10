@@ -24,3 +24,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
     ports:
       - 27017:27017
+
+  eventstore:
+    image: eventstore/eventstore
+    environment:
+      EVENTSTORE_RUN_PROJECTIONS: "System"
+      EVENTSTORE_START_STANDARD_PROJECTIONS: "True"
+    ports:
+      - 2113:2113
+      - 1113:1113

@@ -1,5 +1,6 @@
 ﻿using Cegeka.Guild.Pokeverse.Domain;
 using Cegeka.Guild.Pokeverse.Persistence.EntityFramework;
+using Cegeka.Guild.Pokeverse.Persistence.EventStoreDb;
 using Cegeka.Guild.Pokeverse.RabbitMQ;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,8 @@ namespace Cegeka.Guild.Pokeverse.Infrastructure
             return services
                 .AddScoped<IRepositoryMediator, RepositoryMediator>()
                 .AddEntityFrameworkPersistence(configuration)
+                .AddEventStoreDb()
+                .AddEventSourcedRepository<Battle>()
                 .AddRabbitMqBus();
         }
     }
