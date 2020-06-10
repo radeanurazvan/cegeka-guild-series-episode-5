@@ -14,8 +14,7 @@ namespace Cegeka.Guild.Pokeverse.Persistence.EntityFramework
         {
             return entities
                 .Include(pokemon => pokemon.Definition)
-                    .ThenInclude(definition => definition.Abilities)
-                .Include($"{Pokemon.Expressions.Battles}.{nameof(PokemonBattle.Battle)}");
+                    .ThenInclude(definition => definition.Abilities);
         }
     }
 }

@@ -6,19 +6,18 @@ namespace Cegeka.Guild.Pokeverse.Domain
     {
         private PokemonInFight() {}
 
-        public PokemonInFight(Pokemon pokemon)
+        internal PokemonInFight(Pokemon pokemon)
             : this()
         {
-            PokemonId = pokemon.Id;
-            Pokemon = pokemon;
+            Id = pokemon.Id;
             Health = pokemon.Stats.HealthPoints * 15;
         }
 
-        public Pokemon Pokemon { get; private set; }
-
-        public Guid PokemonId { get; private set; }
+        public Guid Id { get; private set; }
 
         public int Health { get; private set; }
+
+        internal bool Fainted => Health <= 0;
 
         internal void TakeDamage(int damage)
         {

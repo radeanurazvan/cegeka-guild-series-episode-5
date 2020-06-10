@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Cegeka.Guild.Pokeverse.Common.Resources;
 using Cegeka.Guild.Pokeverse.Domain;
@@ -16,11 +17,19 @@ namespace Cegeka.Guild.Pokeverse.Business
             this.mediator = mediator;
         }
 
-        public Task Handle(BattleEndedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(BattleEndedEvent notification, CancellationToken cancellationToken)
         {
-            return this.mediator.Read<Battle>().GetById(notification.BattleId).ToResult(Messages.BattleDoesNotExist)
-                .Bind(b => b.AwardParticipants())
-                .Tap(() => this.mediator.Write<Battle>().Save());
+            var battleResult = await this.mediator.Read<Battle>().GetById(notification.BattleId).ToResult(Messages.BattleDoesNotExist);
+            
+            await battleResult
+                .Tap(b => Award(b, b.Attacker.Id))
+                .Tap(b => Award(b, b.Defender.Id));
+        }
+
+        private Task<Result> Award(Battle battle, Guid pokemonId)
+        {
+            return mediator.Read<Pokemon>().GetById(pokemonId).ToResult(Messages.PokemonDoesNotExist)
+                .Bind(battle.Award);
         }
     }
 }

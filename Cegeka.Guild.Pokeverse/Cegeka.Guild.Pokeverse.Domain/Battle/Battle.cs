@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cegeka.Guild.Pokeverse.Business;
 using Cegeka.Guild.Pokeverse.Common;
 using Cegeka.Guild.Pokeverse.Common.Resources;
@@ -8,6 +9,8 @@ namespace Cegeka.Guild.Pokeverse.Domain
 {
     public sealed class Battle : AggregateRoot
     {
+        private readonly ISet<Guid> rewardedParticipants = new HashSet<Guid>();
+
         private Battle()
         {
             StartedAt = DateTime.Now;
@@ -18,18 +21,12 @@ namespace Cegeka.Guild.Pokeverse.Domain
             return new Battle
             {
                 ActivePlayer = attacker.Id,
-                AttackerId =  attacker.Id,
-                Attacker = new PokemonInFight(attacker),
-                DefenderId = defender.Id,
-                Defender = new PokemonInFight(defender)
+                Attacker =  new PokemonInFight(attacker),
+                Defender = new PokemonInFight(defender),
             };
         }
 
-        public Guid AttackerId { get; private set; }
-
         public PokemonInFight Attacker { get; private set; }
-
-        public Guid DefenderId { get; private set; }
 
         public PokemonInFight Defender { get; private set; }
 
@@ -37,43 +34,38 @@ namespace Cegeka.Guild.Pokeverse.Domain
 
         public DateTime StartedAt { get; private set; }
 
-        public DateTime FinishedAt { get; private set; }
+        public Maybe<DateTime> FinishedAt { get; private set; }
 
-        public Pokemon Winner { get; private set; }
+        public Maybe<Guid> WinnerId { get; private set; }
 
-        public Guid? WinnerId { get; private set; }
+        public Maybe<Guid> LoserId { get; private set; }
 
-        public Pokemon Loser { get; private set; }
+        public bool IsOnGoing => FinishedAt.HasNoValue;
 
-        public Guid? LoserId { get; private set; }
-
-        public bool IsOnGoing => Winner == null;
-
-        internal Result TakeTurn(Guid player, Ability ability)
+        public Result TakeTurn(Guid player, Ability ability)
         {
             return Result.SuccessIf(IsOnGoing, Messages.BattleHasEnded)
-                .Map(() => AttackerId == player ? Defender : Attacker)
+                .Ensure(() => ActivePlayer == player, Messages.NotYourTurn)
+                .Map(() => Attacker.Id == player ? Defender : Attacker)
                 .Tap(victim => victim.TakeDamage(ability.Damage))
-                .Tap(victim => ActivePlayer = victim.PokemonId)
-                .Tap(TryConcludeBattle);
+                .Tap(victim => ActivePlayer = victim.Id)
+                .TapIf(Attacker.Fainted || Defender.Fainted, ConcludeBattle);
         }
 
-        public Result AwardParticipants()
+        public Result Award(Pokemon pokemon)
         {
             return Result.FailureIf(IsOnGoing, Messages.BattleIsOngoing)
-                .Tap(() => this.Loser.CollectExperience(BattleExperience.ForLoser()))
-                .Tap(() => this.Winner.CollectExperience(BattleExperience.ForWinner()));
+                .Ensure(() => pokemon.Id == WinnerId || pokemon.Id == LoserId, Messages.InvalidPokemon)
+                .Ensure(() => !rewardedParticipants.Contains(pokemon.Id), Messages.PokemonAlreadyRewarded)
+                .Map(() => pokemon.Id == LoserId ? BattleExperience.ForLoser() : BattleExperience.ForWinner())
+                .Tap(pokemon.CollectExperience);
         }
 
-        private void TryConcludeBattle(PokemonInFight victim)
+        private void ConcludeBattle(PokemonInFight victim)
         {
-            if (victim.Health > 0)
-            {
-                return;
-            }
+            this.LoserId = victim.Id;
+            this.WinnerId = victim.Id == Attacker.Id ? Defender.Id : Attacker.Id;
 
-            this.Loser = victim.Pokemon;
-            this.Winner = victim.PokemonId == AttackerId ? Defender.Pokemon : Attacker.Pokemon;
             this.FinishedAt = DateTime.Now;
             this.AddDomainEvent(new BattleEndedEvent(this));
         }
