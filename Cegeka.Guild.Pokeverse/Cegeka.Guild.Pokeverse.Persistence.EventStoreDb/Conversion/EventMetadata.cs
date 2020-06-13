@@ -2,13 +2,14 @@
 
 namespace Cegeka.Guild.Pokeverse.Persistence.EventStoreDb
 {
-    internal sealed class EventMetadata
+    public sealed class EventMetadata
     {
         private EventMetadata()
         {
         }
 
         public EventMetadata(string aggregateId, Type eventType, Guid eventId)
+            : this()
         {
             AggregateId = aggregateId;
             ClrType = $"{eventType.FullName}, {eventType.Assembly.GetName().Name}";

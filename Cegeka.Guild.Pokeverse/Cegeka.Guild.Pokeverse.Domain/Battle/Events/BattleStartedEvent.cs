@@ -3,7 +3,7 @@ using Cegeka.Guild.Pokeverse.Common;
 
 namespace Cegeka.Guild.Pokeverse.Domain
 {
-    internal sealed class BattleStartedEvent : IDomainEvent
+    public sealed class BattleStartedEvent : IDomainEvent
     {
         private BattleStartedEvent()
         {

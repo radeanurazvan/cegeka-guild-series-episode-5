@@ -3,7 +3,7 @@ using Cegeka.Guild.Pokeverse.Common;
 
 namespace Cegeka.Guild.Pokeverse.Domain
 {
-    internal sealed class PlayerAwardedEvent : IDomainEvent
+    public sealed class PlayerAwardedEvent : IDomainEvent
     {
         private PlayerAwardedEvent()
         {

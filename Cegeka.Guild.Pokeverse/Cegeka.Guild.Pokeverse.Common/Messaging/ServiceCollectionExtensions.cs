@@ -12,5 +12,14 @@ namespace Cegeka.Guild.Pokeverse.Common
                 .AddScoped(typeof(THandler))
                 .AddScoped(typeof(IMessageHandler<TMessage>), typeof(THandler));
         }
+
+        public static IServiceCollection AddEventHandler<TMessage, THandler>(this IServiceCollection services)
+            where TMessage : IDomainEvent
+            where THandler : IEventHandler<TMessage>
+        {
+            return services
+                .AddScoped(typeof(THandler))
+                .AddScoped(typeof(IEventHandler<TMessage>), typeof(THandler));
+        }
     }
 }

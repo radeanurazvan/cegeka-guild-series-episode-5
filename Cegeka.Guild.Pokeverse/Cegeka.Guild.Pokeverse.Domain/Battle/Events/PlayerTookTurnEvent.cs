@@ -3,7 +3,7 @@ using Cegeka.Guild.Pokeverse.Common;
 
 namespace Cegeka.Guild.Pokeverse.Domain
 {
-    internal sealed class PlayerTookTurnEvent : IDomainEvent
+    public sealed class PlayerTookTurnEvent : IDomainEvent
     {
         private PlayerTookTurnEvent()
         {
@@ -23,7 +23,7 @@ namespace Cegeka.Guild.Pokeverse.Domain
 
         public Guid PlayerId { get; private set; }
 
-        internal sealed class UsedAbility
+        public sealed class UsedAbility
         {
             private UsedAbility()
             {

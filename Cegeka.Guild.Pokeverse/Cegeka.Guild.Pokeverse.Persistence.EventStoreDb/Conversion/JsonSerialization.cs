@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Cegeka.Guild.Pokeverse.Persistence.EventStoreDb
 {
-    internal static class JsonSerialization
+    public static class JsonSerialization
     {
         public static object Deserialize(byte[] buffer, Type type)
         {
